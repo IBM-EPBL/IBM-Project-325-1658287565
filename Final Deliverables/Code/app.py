@@ -9,8 +9,6 @@ api_key = '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
 sg = SendGridAPIClient(api_key)
 
 # Ibm Db2
-
-
 def connection():
     try:
         conn = ibm_db.connect(
