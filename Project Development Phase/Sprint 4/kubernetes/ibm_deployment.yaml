@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-app-container
-          image: icr.io/expensetracker/application
+          image: icr.io/pet-web/petweb
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
