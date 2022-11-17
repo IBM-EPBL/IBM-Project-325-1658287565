@@ -9,6 +9,8 @@ api_key = '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
 sg = SendGridAPIClient(api_key)
 
 # Ibm Db2
+
+
 def connection():
     try:
         conn = ibm_db.connect(
@@ -134,10 +136,6 @@ def addrec():
                 to_emails=email,
                 subject='Registration Successfull',
                 html_content='<strong>and easy to do anywhere,</strong>')
-            res = sg.send(message)
-            print(res.status_code)
-            print(res.body)
-            print(res.headers)
     return redirect(url_for('login', success="Registration Successfull"))
 
 
@@ -206,17 +204,11 @@ def addexpense(balance):
         ibm_db.execute(stmt)
         print('sendMail')
         if (int(balance) <= 100):
-            try:
-                message = Mail(
-                    from_email='admin@pta.com',
-                    to_emails=current_user.user_json['EMAIL'],
-                    subject='Low Balance !!',
-                    html_content='<strong>and easy to do anywhere,</strong>')
-                res = sg.send(message)
-                print(res.status_code)
-
-            except:
-                print("e")
+            message = Mail(
+                from_email='admin@pta.com',
+                to_emails=current_user.user_json['EMAIL'],
+                subject='Low Balance !!',
+                html_content='<strong>and easy to do anywhere,</strong>')
         return redirect(url_for('dashboard', success="Expense added successfully"))
 
 
