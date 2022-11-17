@@ -1,0 +1,7 @@
+flask
+gunicorn
+flask_login
+werkzeug
+ibm_db
+mailjet_rest
+sendgrid

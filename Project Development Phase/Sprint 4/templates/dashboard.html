@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if success%}
+<div class="container-fluid position-fixed z">
+    <div class="mt-4 float-end">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> &nbsp;{{ success }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endif%}
+
+{% if danger%}
+<div class="container-fluid position-fixed z">
+  <div class="mt-4 float-end">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+     <i class="fas fa-exclamation-triangle"></i> &nbsp; {{ danger }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+ </div>
+</div>
+{% endif %}
+
+
+    <div class="d-flex justify-content-center mt-5">
+        <h1 class="h2 text-black"> Welcome Board {{ name }} !!!</h1>
+    </div><br>
+
+ <div class="container mt-5">
+
+    <button type="button" class="btn btn-danger col-auto" data-toggle="modal" data-target="#walletpop">
+      &nbsp;&nbsp;<i class="fas fa-wallet"></i>  Your Wallet &nbsp;
+   </button><br><br>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title m-b-0 text-white">Your Expenses</h5>
+            </div>
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Expense Details</th>
+                                <th scope="col">Date & Time</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="customtable">
+                          {% for row in expensedetails %}
+                                    <tr>
+                                        <td>{{ row['AMOUNT'] }}</td>
+                                        <td>{{ row['DETAILS'] }}</td>
+                                        <td>{{ row['DATEADDED'] }} &nbsp; {{ row['TIMEADDED'] }}</td>
+                                        <td><a href="{{url_for('deleteexpense', val=row['TIMEADDED'], amount=row['AMOUNT'])}}" class="blackhvr" title="Delete"><i class="fas fa-trash del"></i></a></td>
+                                    </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+               </div>
+          </div>
+      </div>
+    </div>
+    
+        <br><br>
+        <h3 class="h5 float-end col-auto mb-2"> Your total expense : ₹{{ totalexpense }}</h3>
+
+        <br><br>
+      <button type="button" class="btn btn-primary float-end col-auto" data-toggle="modal" data-target="#expensemodal">
+          &nbsp;&nbsp;<i class="fas fa-plus"></i> Add Expense &nbsp;
+      </button>
+
+      <br><br><br><br><br>
+     
+    <div class="col-7 d-flex mt-5">
+        <canvas id="linechart" height="125">
+        </canvas>
+      
+        <div class="float-end" style="height: 57%; width:53%; margin-left: 25%;">
+          <canvas id="linechart2" class="float-end">
+          </canvas>
+        </div>
+    </div>
+
+  </div> 
+
+
+
+  <!-- Expense Modal -->
+
+<div class="modal fade" id="expensemodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Expense</h5>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('addexpense',balance=walletbalance )}}" method="post" id="addexpense">
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Amount:</label>
+            <input type="number" class="form-control" name="amount" id="amount" required>
+          </div>
+          <div class="form-group">
+            <label for="detail" class="col-form-label">Detail:</label>
+            <textarea class="form-control" name="details" id="detail" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" form="addexpense" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Modal End-->
+
+
+
+
+<!-- Wallet Add Modal -->
+
+<div class="modal fade" id="walletmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Money To Your Wallet</h5>
+      </div>
+      <div class="modal-body">
+        <form id="addmoney" action="{{ url_for('addmoney')}}" method="post">
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Amount:</label>
+            <input type="number" class="form-control" name="walletamount" id="amount" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" form="addmoney" class="btn btn-primary" data-target="#walletpop">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- wallet Add Modal End -->
+
+
+
+<!-- wallet Modal -->
+
+<div class="modal fade" id="walletpop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true" data-backdrop="true">
+      <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document">
+        <!--Content-->
+        <div class="modal-content">
+          <!--Header-->
+          <div class="modal-header bg-danger">
+            <p class="heading text-white h5">
+              <strong> Your wallet </strong>
+            </p>
+          </div>
+
+          <!--Body-->
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-3">
+                <p></p>
+                <p class="text-center">
+                  <i class="fas fa-wallet fa-5x"></i>
+                </p>
+              </div>
+
+              <div class="col-9">
+                <p>
+                  <strong>Your wallet Balance </u>:</strong>
+                </p>
+                <h2 class="h2 text-success">₹{{ walletbalance }}</h2>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <p class="text-danger"> {{ messages[0] }} </p>
+                {% endif %}
+                {% endwith %}
+
+              </div>
+            </div>
+          </div>
+
+          <!--Footer-->
+          <div class="modal-footer flex-center">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#walletmodal" data-dismiss="modal">
+              <i class="fas fa-plus"></i> Add Money</button>
+
+            <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- wallet Modal End-->
+
+
+<script>
+  
+  // Line Graph
+
+    var ctx = document.getElementById('linechart').getContext('2d');
+    var linechart = new Chart(ctx,{
+      type:'line',
+      data:{
+        labels:{{ label | safe }},
+        datasets:[
+          {
+            label:"Expense Amount",
+            data:{{ amountlabel | safe }},
+            backgroundColor: 'rgba(75, 192, 192, 0.363)',
+            borderColor: 'rgb(255, 99, 132)',
+            fill:true,
+            tension:0.2
+          }
+        ]
+      },
+      options:{
+        resposive:true,
+        hitRadius:25,
+        hoverRadius:10,
+        animation:{
+          delay:700
+        }
+      }
+    })
+
+
+    // Polar Graph
+
+    var ctx2 = document.getElementById('linechart2').getContext('2d');
+    var linechart2 = new Chart(ctx2,{
+      type:'polarArea',
+      data:{
+        labels:{{ label | safe }},
+        datasets:[
+          {
+            label: 'Spent',
+            data: {{ amountlabel | safe }},
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
+                'rgb(201, 203, 207)',
+                'rgb(54, 162, 235)'
+              ]
+        }
+        ]
+      },
+      options:{
+        resposive:true,
+        animation:{
+          delay:1000
+        }
+      }
+    })
+
+</script>
+
+{% endblock %}

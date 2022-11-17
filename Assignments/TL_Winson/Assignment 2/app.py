@@ -12,10 +12,10 @@ def connection():
     except:
         print("Not Connected to Database")
 
+conn = connection()
 
 app = Flask(__name__)
 app.secret_key = '123'
-conn = connection()
 app.debug = True
 app.config['SESSION_TYPE'] = 'filesystem'
 

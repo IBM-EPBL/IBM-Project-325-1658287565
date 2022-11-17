@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
+  name: pet-web
 
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: flask-app
+      app: pet-web
   template:
     metadata:
       labels:
-        app: flask-app
+        app: pet-web
 
     spec:
       containers:
-        - name: webpage
-          image: testt/test
-          imagePullPolicy: Never
+        - name: pet-web
+          image: icr.io/pet-web/petweb
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
               protocol: TCP

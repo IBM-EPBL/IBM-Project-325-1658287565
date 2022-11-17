@@ -15,8 +15,8 @@ spec:
 
     spec:
       containers:
-        - name: web
-          image: jp.icr.io/webpage/web
+        - name: test
+          image: jp.icr.io/testt/test
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
